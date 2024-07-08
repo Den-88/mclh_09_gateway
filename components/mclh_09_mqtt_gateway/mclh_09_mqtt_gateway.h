@@ -22,7 +22,7 @@ namespace mclh_09_mqtt_gateway {
 #define PSTR
 #endif
 
-extern const char *TAG = "mclh-09";
+static const char *TAG = "mclh-09";
 const char *ADVR_MODEL = "4D434C482D3039";
 
 std::vector<float> temp_input{1035, 909, 668, 424, 368, 273, 159, 0};

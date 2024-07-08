@@ -22,7 +22,7 @@ namespace mclh_09_mqtt_gateway {
 #define PSTR
 #endif
 
-static const char *TAG = "mclh-09";
+const char *TAG2 = "mclh-09";
 const char *ADVR_MODEL = "4D434C482D3039";
 
 std::vector<float> temp_input{1035, 909, 668, 424, 368, 273, 159, 0};
@@ -188,13 +188,13 @@ public:
   }
 
   void dump_config() override {
-    ESP_LOGCONFIG(TAG, "Mclh09Device '%s'", id.c_str());
-    ESP_LOGCONFIG(TAG, "  MAC address: %s", to_string(this->address_).c_str());
-    ESP_LOGCONFIG(TAG, "  State Topic: '%s'", state_topic.c_str());
-    ESP_LOGCONFIG(TAG, "  Status Topic: '%s'", status_topic.c_str());
-    ESP_LOGCONFIG(TAG, "  Payload online/offline: '%s', '%s'", payload_online, payload_offline);
-    ESP_LOGCONFIG(TAG, "  Alert State Topic: '%s'", alert_state_topic.c_str());
-    ESP_LOGCONFIG(TAG, "  Alert Command Topic: '%s'", alert_set_topic.c_str());
+    ESP_LOGCONFIG(TAG2, "Mclh09Device '%s'", id.c_str());
+    ESP_LOGCONFIG(TAG2, "  MAC address: %s", to_string(this->address_).c_str());
+    ESP_LOGCONFIG(TAG2, "  State Topic: '%s'", state_topic.c_str());
+    ESP_LOGCONFIG(TAG2, "  Status Topic: '%s'", status_topic.c_str());
+    ESP_LOGCONFIG(TAG2, "  Payload online/offline: '%s', '%s'", payload_online, payload_offline);
+    ESP_LOGCONFIG(TAG2, "  Alert State Topic: '%s'", alert_state_topic.c_str());
+    ESP_LOGCONFIG(TAG2, "  Alert Command Topic: '%s'", alert_set_topic.c_str());
   }
 
   void setup() override {
@@ -469,14 +469,14 @@ private:
 
   float interpolate(float value, std::vector<float> &input, std::vector<float> &output, bool limit = false) {
     if (input.size() != output.size() || input.size() < 3) {
-      ESP_LOGE(TAG, "Bad size of input/output arrays for interpolate()");
+      ESP_LOGE(TAG2, "Bad size of input/output arrays for interpolate()");
       return NAN;
     }
     size_t i = 0;
     while (i < input.size() - 1 && value < input[i + 1])
       i++;
     float result = (output[i] - output[i + 1]) * (value - input[i + 1]) / (input[i] - input[i + 1]) + output[i + 1];
-    ESP_LOGV(TAG, "interpolate(%f) = %f, index = %d, (%f, %f)", value, result, i, input[i], input[i + 1]);
+    ESP_LOGV(TAG2, "interpolate(%f) = %f, index = %d, (%f, %f)", value, result, i, input[i], input[i + 1]);
     return limit ? limit_value(result, output[output.size() - 1], output[0]) : result;
   }
 };
@@ -498,13 +498,13 @@ public:
 mclh09_sensors.push_back(&ERRORS);
 
     (new Automation<>(new mqtt::MQTTConnectTrigger(this->mqtt_client_)))->add_actions({new LambdaAction<>([=]() -> void {
-      ESP_LOGD(TAG, "Connected to MQTT");
+      ESP_LOGD(TAG2, "Connected to MQTT");
       for (auto device : devices_)
         device->set_connected(true);
     })});
 
     (new Automation<>(new mqtt::MQTTDisconnectTrigger(this->mqtt_client_)))->add_actions({new LambdaAction<>([=]() -> void {
-      ESP_LOGD(TAG, "Disconnected from MQTT");
+      ESP_LOGD(TAG2, "Disconnected from MQTT");
       for (auto device : devices_)
         device->set_connected(false);
     })});
@@ -523,16 +523,16 @@ mclh09_sensors.push_back(&ERRORS);
       uint64_t addr = x.address_uint64();
       for (auto device : devices_)
         if (device->get_address() == addr) {
-          ESP_LOGD(TAG, "Parsed already found MCLH-09 '%s'", x.address_str().c_str());
+          ESP_LOGD(TAG2, "Parsed already found MCLH-09 '%s'", x.address_str().c_str());
           return;
         }
-      ESP_LOGI(TAG, "Parsed new MCLH-09 '%s'", x.address_str().c_str());
+      ESP_LOGI(TAG2, "Parsed new MCLH-09 '%s'", x.address_str().c_str());
       add_device(addr);
     }
   }
 
   void set_update_interval(uint32_t update_interval) {
-    ESP_LOGD(TAG, "Setting update interval to %dms", update_interval);
+    ESP_LOGD(TAG2, "Setting update interval to %dms", update_interval);
     this->update_interval_ = update_interval;
     for (auto device : devices_)
       device->set_update_interval(update_interval);

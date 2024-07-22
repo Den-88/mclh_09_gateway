@@ -18,7 +18,7 @@ namespace mclh_09_gateway {
 
 #define SENSOR_ID "mclh09_%03d_%s"
 #define SENSOR_NAME "mclh09_%03d %s"
-const char *TAG = "mclh-09";
+const char *TAGNEW = "mclh-09";
 
 class AlertSelect : public select::Select, public Component {
 
@@ -286,7 +286,7 @@ public:
   }
 
   void set_update_interval(uint32_t update_interval) {
-    ESP_LOGD(TAG, "Setting update interval to %dms", update_interval);
+    ESP_LOGD(TAGNEW, "Setting update interval to %dms", update_interval);
     for (size_t i = 0; i < device_count; i++)
       ble_client[i]->set_update_interval(update_interval);
   }
@@ -325,14 +325,14 @@ private:
 
   float interpolate(float value, std::vector<float> &input, std::vector<float> &output, bool limit = false) {
     if (input.size() != output.size() || input.size() < 3) {
-      ESP_LOGE(TAG, "Bad size of input/output arrays for interpolate()");
+      ESP_LOGE(TAGNEW, "Bad size of input/output arrays for interpolate()");
       return NAN;
     }
     size_t i = 0;
     while (i < input.size() - 1 && value < input[i + 1])
       i++;
     float result = (output[i] - output[i + 1]) * (value - input[i + 1]) / (input[i] - input[i + 1]) + output[i + 1];
-    ESP_LOGV(TAG, "interpolate(%f) = %f, index = %d, (%f, %f)", value, result, i, input[i], input[i + 1]);
+    ESP_LOGV(TAGNEW, "interpolate(%f) = %f, index = %d, (%f, %f)", value, result, i, input[i], input[i + 1]);
     return limit ? limit_value(result, output[output.size() - 1], output[0]) : result;
   }
 };

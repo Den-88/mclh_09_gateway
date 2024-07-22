@@ -18,7 +18,6 @@ namespace mclh_09_gateway {
 
 #define SENSOR_ID "mclh09_%03d_%s"
 #define SENSOR_NAME "mclh09_%03d %s"
-// const char *TAGNEW = "mclh-09";
 
 class AlertSelect : public select::Select, public Component {
 
